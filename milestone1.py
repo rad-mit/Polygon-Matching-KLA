@@ -14,18 +14,25 @@ class polygon:
 
     def printPolygon(self):
         print("boundary", file=f)
-        print("layer", self.layer, file=f)
-        print ("datatype", self.datatype, file=f)
-        print("xy", self.xy_num, end="", file=f)
+        #f.write("layer %s", self.layer)
+        print("layer {}".format(self.layer), file=f)
+        #f.write()
+        #f.write("datatype", self.datatype)
+        print("datatype {}".format(self.datatype), file=f)
+        print("xy", file=f, end=" ")
+        #f.write("xy", self.xy_num, end="")
         #print(self.xy)
 
         num=int(self.xy_num)
 
         for i in range (0, num):
-            print(self.xy.x[i], end=" ", file=f)
-            print(self.xy.y[i], end=" ", file=f)
+            #f.write(self.xy.x[i], end=" ")
+            print("{}".format(self.xy.x[i]), file=f, end=" ")
+            #f.write(self.xy.y[i], end=" ")
+            print("{}".format(self.xy.y[i]), file=f, end=" ")
 
-        print("", file=f)
+        #print("{}".format(self.xy.x[i]), file=f)
+        #f.write("", file=f)
         print("endel", file=f)
     pass
 
@@ -83,8 +90,8 @@ with open(r"C:\Users\radhi\OneDrive\Desktop\Milestone_Input\Milestone_Input\Mile
 with open(r"milestone1_output.txt", "w") as f:
     for i in header:
         f.write("%s" % i)
-    for i in range(8,18):
-        f.write(lines[i])
+    for i in range(2):
+        polygons[i].printPolygon()
     for i in footer:
         f.write("%s" % i)
     f.close()
