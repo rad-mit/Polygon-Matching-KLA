@@ -1,0 +1,15 @@
+header 600 
+bgnlib 1/17/2023 18:06:45 1/17/2023 18:06:45 
+libname drc.db
+units 0.0001 1e-10 
+
+bgnstr 1/17/2023 18:06:45 1/17/2023 18:06:45 
+strname top
+
+boundary
+layer 1
+datatype 0
+xy  7  -180 19010  -180 23850  1190 23850  1190 20280  3630 20280  3630 19010  -180 19010
+endel
+endstr
+endlib

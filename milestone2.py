@@ -33,17 +33,12 @@ class polygon:
             print("{}".format(self.xy.y[i]), file=f, end=" ")
 
         #print("{}".format(self.xy.x[i]), file=f)
-        #f.write("", file=f)
+        print("", file=f)
         print("endel", file=f)
     pass
 
 
-polygon_num=0
-polygons=[]
-header=[]
-footer=[]
-
-with open(r"C:\Users\radhi\OneDrive\Desktop\Milestone_Input\Milestone_Input\Milestone 1\Format_Source.txt") as file:
+def read_polygon(file, header, footer, polygons):
     hflag=0
     lines=file.readlines()
     for x in lines:
@@ -54,7 +49,7 @@ with open(r"C:\Users\radhi\OneDrive\Desktop\Milestone_Input\Milestone_Input\Mile
             continue
 
         if (parts[0] == "boundary"):
-            polygon_num = polygon_num + 1
+            #polygon_num = polygon_num + 1
             
             hflag=1
         elif (parts[0] == "layer"):
@@ -86,17 +81,69 @@ with open(r"C:\Users\radhi\OneDrive\Desktop\Milestone_Input\Milestone_Input\Mile
         if (parts[0] == "endstr" or parts[0] == "endlib"):
             footer.append(x)
 
-#print(footer)
+    return header, footer, polygons
 
-with open(r"milestone1_output.txt", "w") as f:
-    for i in header:
-        f.write("%s" % i)
-    for i in range(2):
-        polygons[i].printPolygon()
-    for i in footer:
-        f.write("%s" % i)
-    f.close()    
+with open (r"milestone2/POI.txt") as f:
+    rheader=[]
+    rfooter=[]
+    rpolygons=[]
+    rheader, rfooter, rpolygons = read_polygon(f, rheader, rfooter, rpolygons)
 
+f.close()
+
+with open(r"milestone2/Source.txt") as f:
+    spolygons=[]
+    sheader=[]
+    sfooter=[]
+    sheader, sfooter, spolygons = read_polygon(f, sheader, sfooter, spolygons)
+
+f.close()
+
+#print(rpolygons[0].xy.x)
+
+#print(len(spolygons))
+
+rpolx=[]
+rpoly=[]
+
+for i in range(7):
+    rpolx.append(int(rpolygons[0].xy.x[i])-int(rpolygons[0].xy.x[0]))
+    rpoly.append(int(rpolygons[0].xy.y[i])-int(rpolygons[0].xy.y[0]))
+
+#print(rpolygons[0].xy.x)
+print(rpoly)
+
+spolx=[]
+spoly=[]
+
+for i in range (len(spolygons)):
+    spolx_temp=[]
+    spoly_temp=[]
+    for j in range (len(spolygons[i].xy.x)):
+        spolx_temp.append(int(spolygons[i].xy.x[j])-int(rpolygons[0].xy.x[0]))
+        spoly_temp.append(int(spolygons[i].xy.y[j])-int(rpolygons[0].xy.y[0]))
+    spolx.append(spolx_temp)
+    spoly.append(spoly_temp)
+
+#print(spolx)
+
+with open(r"milestone2_debug.txt", "w") as f:
+
+    for i in sheader:
+        f.write("%s" % i)
+
+    for i in range(len(spolygons)):
+        if (spolx[i] == rpolx and spoly[i]==rpoly):
+            spolygons[i].printPolygon()
+            print(spolx[i], rpolx, spoly[i], rpoly)
+           # print("Yes!")
+
+    for i in sfooter:
+        f.write("%s" % i)
+
+    #print(spolygons[0].xy.x)
+
+f.close()
 
 
 
