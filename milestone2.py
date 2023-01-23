@@ -1,4 +1,3 @@
-# class with multiple attributes python
 class polygon:
 
     def __init__(self, layer, datatype, xy_num,x,y):
@@ -83,6 +82,16 @@ def read_polygon(file, header, footer, polygons):
 
     return header, footer, polygons
 
+def polygonArea(X, Y, n):
+    area = 0.0
+    # Calculate value of shoelace formula
+    j = n - 1
+    for i in range(0,n):
+        area += (X[j] + X[i]) * (Y[j] - Y[i])
+        j = i   # j is previous vertex to i
+    # Return absolute value
+    return int(abs(area / 2.0))
+
 with open (r"milestone2/POI.txt") as f:
     rheader=[]
     rfooter=[]
@@ -99,57 +108,45 @@ with open(r"milestone2/Source.txt") as f:
 
 f.close()
 
-#print(rpolygons[0].xy.x)
-
-#print(len(spolygons))
-
 rpolx=[]
 rpoly=[]
 
 for i in range(7):
-    rpolx.append(int(rpolygons[0].xy.x[i])-int(rpolygons[0].xy.x[0]))
-    rpoly.append(int(rpolygons[0].xy.y[i])-int(rpolygons[0].xy.y[0]))
+    rpolx.append(int(rpolygons[0].xy.x[i]))
+    rpoly.append(int(rpolygons[0].xy.y[i]))
+
+ref_area=polygonArea(rpolx, rpoly, 7)
+print(ref_area)
 
 #print(rpolygons[0].xy.x)
-print(rpoly)
+#print(rpoly)
 
-spolx=[]
-spoly=[]
+spol_area=[]
 
 for i in range (len(spolygons)):
-    spolx_temp=[]
-    spoly_temp=[]
+    spolx=[]
+    spoly=[]
     for j in range (len(spolygons[i].xy.x)):
-        spolx_temp.append(int(spolygons[i].xy.x[j])-int(rpolygons[0].xy.x[0]))
-        spoly_temp.append(int(spolygons[i].xy.y[j])-int(rpolygons[0].xy.y[0]))
-    spolx.append(spolx_temp)
-    spoly.append(spoly_temp)
+        spolx.append(int(spolygons[i].xy.x[j]))
+        spoly.append(int(spolygons[i].xy.y[j]))
+    spol_area.append(polygonArea(spolx, spoly, len(spolx)))
 
-#print(spolx)
+#print(spol_area)
 
-with open(r"milestone2_debug.txt", "w") as f:
+with open(r"milestone2_output.txt", "w") as f:
 
+    k=0
     for i in sheader:
         f.write("%s" % i)
 
     for i in range(len(spolygons)):
-        if (spolx[i] == rpolx and spoly[i]==rpoly):
+       if (spol_area[i] == ref_area):
             spolygons[i].printPolygon()
-            print(spolx[i], rpolx, spoly[i], rpoly)
-           # print("Yes!")
+            k=k+1
 
     for i in sfooter:
         f.write("%s" % i)
 
     #print(spolygons[0].xy.x)
-
+    print(k)
 f.close()
-
-
-
-    
-
-
-
-    
-
