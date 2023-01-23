@@ -1,3 +1,6 @@
+import threading
+from multiprocessing.pool import ThreadPool as Pool
+
 class polygon:
 
     def __init__(self, layer, datatype, xy_num,x,y):
@@ -82,6 +85,8 @@ def read_polygon(file, header, footer, polygons):
 
     return header, footer, polygons
 
+spol_area=[]
+
 def polygonArea(X, Y, n):
     area = 0.0
     # Calculate value of shoelace formula
@@ -90,9 +95,10 @@ def polygonArea(X, Y, n):
         area += (X[j] + X[i]) * (Y[j] - Y[i])
         j = i   # j is previous vertex to i
     # Return absolute value
+    spol_area.append(int(abs(area / 2.0)))
     return int(abs(area / 2.0))
 
-with open (r"milestone4/POI.txt") as f:
+with open (r"milestone5/POI.txt") as f:
     rheader=[]
     rfooter=[]
     rpolygons=[]
@@ -100,39 +106,34 @@ with open (r"milestone4/POI.txt") as f:
 
 f.close()
 
-with open(r"milestone4/Source.txt") as f:
+with open(r"milestone5/Source.txt") as f:
     spolygons=[]
     sheader=[]
     sfooter=[]
     sheader, sfooter, spolygons = read_polygon(f, sheader, sfooter, spolygons)
+    print(len(spolygons))
 
 f.close()
 
 rpolx=[]
 rpoly=[]
 
-for i in range(5):
+for i in range(13):
     rpolx.append(int(rpolygons[0].xy.x[i]))
     rpoly.append(int(rpolygons[0].xy.y[i]))
 
 
-ref_area1=polygonArea(rpolx, rpoly, 5)
+ref_area=polygonArea(rpolx, rpoly, 13)
 
-rpolx=[]
-rpoly=[]
+print(ref_area)
 
-for i in range(5):
-    rpolx.append(int(rpolygons[1].xy.x[i]))
-    rpoly.append(int(rpolygons[1].xy.y[i]))
-
-ref_area2=polygonArea(rpolx, rpoly, 5)
-
-print(ref_area1,ref_area2)
+spol_area=[]
 
 #print(rpolygons[0].xy.x)
 #print(rpoly)
 
-spol_area=[]
+spolx_all=[]
+spoly_all=[]
 
 for i in range (len(spolygons)):
     spolx=[]
@@ -140,18 +141,31 @@ for i in range (len(spolygons)):
     for j in range (len(spolygons[i].xy.x)):
         spolx.append(int(spolygons[i].xy.x[j]))
         spoly.append(int(spolygons[i].xy.y[j]))
-    spol_area.append(polygonArea(spolx, spoly, len(spolx)))
+    spolx_all.append(spolx)
+    spoly_all.append(spoly)
 
-print(spol_area)
+print(len(spol_area))
 
-with open(r"milestone4_output.txt", "w") as f:
+pool_size = 20
+
+pool = Pool(pool_size)
+
+for i in range(len(spolygons)):
+    pool.apply_async(polygonArea, (spolx_all[i],spoly_all[i], len(spolx_all[i]),))
+
+pool.close()
+pool.join()
+print(len(spol_area))
+
+
+with open(r"milestone5_output.txt", "w") as f:
 
     k=0
     for i in sheader:
         f.write("%s" % i)
 
     for i in range(len(spolygons)):
-       if (spol_area[i] == ref_area1 or spol_area[i]==ref_area2):
+       if (spol_area[i] == ref_area):
             spolygons[i].printPolygon()
             k=k+1
 

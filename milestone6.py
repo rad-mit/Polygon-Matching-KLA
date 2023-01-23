@@ -92,7 +92,7 @@ def polygonArea(X, Y, n):
     # Return absolute value
     return int(abs(area / 2.0))
 
-with open (r"milestone4/POI.txt") as f:
+with open (r"milestone6/POI.txt") as f:
     rheader=[]
     rfooter=[]
     rpolygons=[]
@@ -100,7 +100,7 @@ with open (r"milestone4/POI.txt") as f:
 
 f.close()
 
-with open(r"milestone4/Source.txt") as f:
+with open(r"milestone6/Source.txt") as f:
     spolygons=[]
     sheader=[]
     sfooter=[]
@@ -111,23 +111,14 @@ f.close()
 rpolx=[]
 rpoly=[]
 
-for i in range(5):
+for i in range(9):
     rpolx.append(int(rpolygons[0].xy.x[i]))
     rpoly.append(int(rpolygons[0].xy.y[i]))
 
 
-ref_area1=polygonArea(rpolx, rpoly, 5)
+ref_area=polygonArea(rpolx, rpoly, 9)
 
-rpolx=[]
-rpoly=[]
-
-for i in range(5):
-    rpolx.append(int(rpolygons[1].xy.x[i]))
-    rpoly.append(int(rpolygons[1].xy.y[i]))
-
-ref_area2=polygonArea(rpolx, rpoly, 5)
-
-print(ref_area1,ref_area2)
+print(ref_area)
 
 #print(rpolygons[0].xy.x)
 #print(rpoly)
@@ -142,16 +133,16 @@ for i in range (len(spolygons)):
         spoly.append(int(spolygons[i].xy.y[j]))
     spol_area.append(polygonArea(spolx, spoly, len(spolx)))
 
-print(spol_area)
+#print(spol_area)
 
-with open(r"milestone4_output.txt", "w") as f:
+with open(r"milestone6_output.txt", "w") as f:
 
     k=0
     for i in sheader:
         f.write("%s" % i)
 
     for i in range(len(spolygons)):
-       if (spol_area[i] == ref_area1 or spol_area[i]==ref_area2):
+       if (spol_area[i] == ref_area):
             spolygons[i].printPolygon()
             k=k+1
 
